@@ -116,6 +116,11 @@ class DispatchRecord(BaseModel):
     reason: str = "auto"
 
 
+class BatchDispatchRequest(BaseModel):
+    order_ids: List[str]
+    strategy: str = "nearest"
+
+
 class Alert(BaseModel):
     alert_id: str = Field(default_factory=_uid)
     type: AlertType

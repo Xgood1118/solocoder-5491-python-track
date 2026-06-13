@@ -35,7 +35,13 @@ class LocationService:
         )
 
         if is_drift:
-            self.consecutive_drifts[rider_id] += 1
+            is_true_drift = reason.startswith("jump_too_large") or reason.startswith("speed_too_high")
+
+            if is_true_drift:
+                self.consecutive_drifts[rider_id] += 1
+            else:
+                self.consecutive_drifts[rider_id] = max(0, self.consecutive_drifts[rider_id] - 1)
+
             if self.consecutive_drifts[rider_id] >= 3:
                 alerts.append(Alert(
                     type=AlertType.DRIFT,
@@ -44,6 +50,14 @@ class LocationService:
                     message=f"骑手{rider_id} GPS连续漂移: {reason}",
                 ))
                 self.consecutive_drifts[rider_id] = 0
+                return None, alerts
+
+            if self.consecutive_drifts[rider_id] >= 2 and is_true_drift:
+                history = list(store.location_history.get(rider_id, []))
+                smoothed = smooth_location(raw_location, history, window_size=5)
+                self._accept_location(rider_id, smoothed, rider, alerts)
+                return smoothed, alerts
+
             return None, alerts
 
         self.consecutive_drifts[rider_id] = 0
@@ -51,17 +65,25 @@ class LocationService:
         history = list(store.location_history.get(rider_id, []))
         smoothed = smooth_location(raw_location, history, window_size=3)
 
-        self.last_locations[rider_id] = smoothed
-        self.disconnect_timers[rider_id] = smoothed.timestamp
+        self._accept_location(rider_id, smoothed, rider, alerts)
 
-        store.update_rider_location(rider_id, smoothed)
+        return smoothed, alerts
+
+    def _accept_location(
+        self,
+        rider_id: str,
+        location: Location,
+        rider: Rider,
+        alerts: List[Alert],
+    ) -> None:
+        self.last_locations[rider_id] = location
+        self.disconnect_timers[rider_id] = location.timestamp
+        store.update_rider_location(rider_id, location)
 
         if rider.status == RiderStatus.OFFLINE:
             store.update_rider_status(rider_id, RiderStatus.IDLE)
 
-        alerts.extend(self._check_speed_anomaly(rider, smoothed))
-
-        return smoothed, alerts
+        alerts.extend(self._check_speed_anomaly(rider, location))
 
     def _check_speed_anomaly(self, rider: Rider, location: Location) -> List[Alert]:
         alerts: List[Alert] = []

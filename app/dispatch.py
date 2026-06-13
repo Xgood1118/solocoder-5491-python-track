@@ -38,8 +38,18 @@ class DispatchService:
         if rider.current_orders >= rider.capacity:
             return -1.0, {"reason": "over_capacity"}
 
-        if order.region != rider.region and rider.region != "default":
-            pass
+        region_penalty = 0.0
+        region_mismatch = False
+
+        if order.region != rider.region and rider.region != "default" and order.region != "default":
+            region_mismatch = True
+            region_penalty = 0.3
+
+        cbd_congestion_penalty = 0.0
+        if rider.region == "cbd" and order.region == "cbd":
+            cbd_load = self._get_region_cbd_load()
+            if cbd_load > 0.7:
+                cbd_congestion_penalty = min(0.4, (cbd_load - 0.7) * 1.5)
 
         pickup_dist = distance_between(rider.current_location, order.pickup_location)
         delivery_dist = distance_between(order.pickup_location, order.delivery_location)
@@ -47,6 +57,9 @@ class DispatchService:
 
         max_dist = 10000.0
         dist_score = max(0.0, 1.0 - (total_dist / max_dist))
+
+        if region_mismatch and pickup_dist > 3000:
+            dist_score *= 0.5
 
         rating_score = rider.score / 5.0
 
@@ -73,6 +86,8 @@ class DispatchService:
             + load_score * weights["load"]
             + min(1.0, avg_speed) * weights["speed"]
             - recent_penalty
+            - region_penalty
+            - cbd_congestion_penalty
         )
 
         breakdown = {
@@ -81,12 +96,24 @@ class DispatchService:
             "load_score": round(load_score, 3),
             "speed_score": round(min(1.0, avg_speed), 3),
             "recent_penalty": round(recent_penalty, 3),
+            "region_penalty": round(region_penalty, 3),
+            "cbd_congestion_penalty": round(cbd_congestion_penalty, 3),
+            "region_mismatch": region_mismatch,
             "total_distance_meters": round(total_dist, 1),
             "pickup_distance_meters": round(pickup_dist, 1),
-            "final_score": round(final_score, 3),
+            "final_score": round(max(0.0, final_score), 3),
         }
 
         return max(0.0, final_score), breakdown
+
+    def _get_region_cbd_load(self) -> float:
+        cbd_riders = store.list_riders(region="cbd")
+        online = [r for r in cbd_riders if r.status != RiderStatus.OFFLINE]
+        if not online:
+            return 0.0
+        total_capacity = sum(r.capacity for r in online)
+        current_load = sum(r.current_orders for r in online)
+        return current_load / max(1, total_capacity)
 
     def find_best_rider(
         self,

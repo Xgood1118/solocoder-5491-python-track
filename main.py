@@ -7,12 +7,12 @@ from datetime import datetime
 from typing import Optional, List
 from pathlib import Path
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Query
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.models import (
-    Rider, Order, Location, Alert,
+    Rider, Order, Location, Alert, BatchDispatchRequest,
     RiderStatus, OrderStatus, AlertSeverity,
 )
 from app.storage import store
@@ -47,9 +47,11 @@ async def _snapshot_loop() -> None:
             now = datetime.utcnow()
             filename = f"snapshot_{now.strftime('%Y%m%d_%H%M%S')}.json"
             filepath = os.path.join(settings.snapshot_dir, filename)
+            tmp_filepath = filepath + ".tmp"
             data = store.to_dict()
-            with open(filepath, "w", encoding="utf-8") as f:
+            with open(tmp_filepath, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_filepath, filepath)
 
             snapshots = sorted(Path(settings.snapshot_dir).glob("snapshot_*.json"))
             if len(snapshots) > 24:
@@ -281,9 +283,25 @@ async def dispatch_order(
 
 @app.post("/api/orders/batch-dispatch")
 async def batch_dispatch_orders(
-    order_ids: List[str],
-    strategy: str = "nearest",
+    request: Request,
+    body: Optional[BatchDispatchRequest] = None,
 ) -> dict:
+    try:
+        raw = await request.json()
+        if isinstance(raw, list):
+            order_ids = raw
+            strategy = "nearest"
+        else:
+            if body is None:
+                raise HTTPException(status_code=400, detail="invalid_body")
+            order_ids = body.order_ids
+            strategy = body.strategy
+    except Exception:
+        if body is None:
+            raise HTTPException(status_code=400, detail="invalid_body")
+        order_ids = body.order_ids
+        strategy = body.strategy
+
     if strategy not in ["nearest", "optimize"]:
         raise HTTPException(status_code=400, detail="invalid_strategy")
     return dispatch_service.batch_dispatch(order_ids, strategy=strategy)
@@ -450,9 +468,11 @@ async def save_snapshot() -> dict:
     now = datetime.utcnow()
     filename = f"snapshot_{now.strftime('%Y%m%d_%H%M%S')}.json"
     filepath = os.path.join(settings.snapshot_dir, filename)
+    tmp_filepath = filepath + ".tmp"
     data = store.to_dict()
-    with open(filepath, "w", encoding="utf-8") as f:
+    with open(tmp_filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+    os.replace(tmp_filepath, filepath)
     return {"success": True, "filename": filename, "path": filepath}
 
 
@@ -461,8 +481,11 @@ async def load_snapshot(filename: str) -> dict:
     filepath = os.path.join(settings.snapshot_dir, filename)
     if not os.path.exists(filepath):
         raise HTTPException(status_code=404, detail="snapshot_not_found")
-    with open(filepath, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        raise HTTPException(status_code=400, detail=f"corrupt_snapshot: {str(e)}")
     store.load_from_dict(data)
     return {"success": True, "loaded": filename}
 

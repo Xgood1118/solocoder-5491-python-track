@@ -270,26 +270,41 @@ class DataStore:
             self._initialize()
 
             for rider_data in data.get("riders", []):
-                rider = Rider(**rider_data)
-                self.riders[rider.rider_id] = rider
+                try:
+                    rider = Rider(**rider_data)
+                    self.riders[rider.rider_id] = rider
+                except Exception:
+                    continue
 
             for order_data in data.get("orders", []):
-                order = Order(**order_data)
-                self.orders[order.order_id] = order
+                try:
+                    order = Order(**order_data)
+                    self.orders[order.order_id] = order
+                except Exception:
+                    continue
 
             for alert_data in data.get("alerts", []):
-                alert = Alert(**alert_data)
-                self.alerts[alert.alert_id] = alert
+                try:
+                    alert = Alert(**alert_data)
+                    self.alerts[alert.alert_id] = alert
+                except Exception:
+                    continue
 
             for record_data in data.get("dispatch_records", []):
-                self.dispatch_records.append(DispatchRecord(**record_data))
+                try:
+                    self.dispatch_records.append(DispatchRecord(**record_data))
+                except Exception:
+                    continue
 
             for point_data in data.get("trajectory_points", []):
-                point = TrajectoryPoint(**point_data)
-                self.trajectory_points.append(point)
-                self.location_history[point.rider_id].append(
-                    Location(**{k: v for k, v in point_data.items() if k != "rider_id"})
-                )
+                try:
+                    point = TrajectoryPoint(**point_data)
+                    self.trajectory_points.append(point)
+                    self.location_history[point.rider_id].append(
+                        Location(**{k: v for k, v in point_data.items() if k != "rider_id"})
+                    )
+                except Exception:
+                    continue
 
 
 store = DataStore()

@@ -149,14 +149,20 @@ def detect_gps_drift(
 
     speed = dist / time_delta
 
-    if dist > threshold_meters * 5:
-        return True, f"jump_too_large:{dist:.1f}m"
+    accuracy = current.accuracy if current.accuracy is not None else 0.0
 
-    if speed > max_speed_mps:
-        return True, f"speed_too_high:{speed:.1f}m/s"
+    effective_threshold = threshold_meters + max(0.0, accuracy - 30.0) * 1.5
 
-    if current.accuracy is not None and current.accuracy > 50:
-        return True, f"low_accuracy:{current.accuracy:.1f}m"
+    if dist > effective_threshold * 5:
+        return True, f"jump_too_large:{dist:.1f}m_threshold:{effective_threshold:.1f}m"
+
+    effective_max_speed = max_speed_mps + max(0.0, accuracy - 50.0) * 0.2
+
+    if speed > effective_max_speed:
+        return True, f"speed_too_high:{speed:.1f}m/s_limit:{effective_max_speed:.1f}m/s"
+
+    if accuracy > 200:
+        return True, f"low_accuracy:{accuracy:.1f}m"
 
     return False, "ok"
 
