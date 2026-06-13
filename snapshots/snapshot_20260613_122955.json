@@ -1,0 +1,239 @@
+{
+  "riders": [
+    {
+      "rider_id": "481059d1ccc44020",
+      "name": "test",
+      "phone": "123",
+      "region": "default",
+      "status": "offline",
+      "current_location": {
+        "lat": 39.911,
+        "lng": 116.401,
+        "timestamp": 1749830405.0,
+        "accuracy": 10.0,
+        "speed": 5.0,
+        "bearing": null
+      },
+      "last_seen": 1749830405.0,
+      "score": 5.0,
+      "daily_orders": 1,
+      "current_orders": 0,
+      "total_delivered": 1,
+      "avg_delivery_minutes": 0.012230384349822997,
+      "capacity": 8,
+      "online_since": null
+    },
+    {
+      "rider_id": "18101c00d1564652",
+      "name": "r1",
+      "phone": "123",
+      "region": "default",
+      "status": "offline",
+      "current_location": {
+        "lat": 39.91,
+        "lng": 116.4,
+        "timestamp": 1781324905.938283,
+        "accuracy": null,
+        "speed": null,
+        "bearing": null
+      },
+      "last_seen": 1781324905.938283,
+      "score": 5.0,
+      "daily_orders": 0,
+      "current_orders": 0,
+      "total_delivered": 0,
+      "avg_delivery_minutes": 0.0,
+      "capacity": 8,
+      "online_since": null
+    },
+    {
+      "rider_id": "ca14f559a5934398",
+      "name": "r2",
+      "phone": "123",
+      "region": "default",
+      "status": "idle",
+      "current_location": {
+        "lat": 39.92,
+        "lng": 116.41,
+        "timestamp": 1749830400.0,
+        "accuracy": 10.0,
+        "speed": 5.0,
+        "bearing": 0.0
+      },
+      "last_seen": 1781324906.185251,
+      "score": 5.0,
+      "daily_orders": 0,
+      "current_orders": 0,
+      "total_delivered": 0,
+      "avg_delivery_minutes": 0.0,
+      "capacity": 8,
+      "online_since": null
+    },
+    {
+      "rider_id": "7a008ad4cae0489e",
+      "name": "r3",
+      "phone": "123",
+      "region": "default",
+      "status": "idle",
+      "current_location": null,
+      "last_seen": 1781324906.443592,
+      "score": 5.0,
+      "daily_orders": 0,
+      "current_orders": 0,
+      "total_delivered": 0,
+      "avg_delivery_minutes": 0.0,
+      "capacity": 8,
+      "online_since": null
+    }
+  ],
+  "orders": [
+    {
+      "order_id": "8c85e9da03e14fe5",
+      "customer_name": "Alice",
+      "customer_phone": "13800139001",
+      "pickup_address": "CBD-A",
+      "pickup_location": {
+        "lat": 39.9,
+        "lng": 116.4
+      },
+      "delivery_address": "CBD-B",
+      "delivery_location": {
+        "lat": 39.92,
+        "lng": 116.42
+      },
+      "region": "cbd",
+      "priority": 1,
+      "promised_delivery_seconds": 1800,
+      "created_at": 1781324935.440236,
+      "assigned_at": 1781324936.205291,
+      "picked_at": 1781324936.687744,
+      "delivered_at": 1781324936.939114,
+      "status": "delivered",
+      "rider_id": "481059d1ccc44020",
+      "estimated_delivery_seconds": 1105,
+      "items": []
+    },
+    {
+      "order_id": "8ee3936bc486438b",
+      "customer_name": "Bulk1",
+      "customer_phone": "13800139001",
+      "pickup_address": "CBD",
+      "pickup_location": {
+        "lat": 39.91,
+        "lng": 116.4
+      },
+      "delivery_address": "D",
+      "delivery_location": {
+        "lat": 39.92,
+        "lng": 116.41
+      },
+      "region": "default",
+      "priority": 1,
+      "promised_delivery_seconds": 1800,
+      "created_at": 1781324961.56163,
+      "assigned_at": null,
+      "picked_at": null,
+      "delivered_at": null,
+      "status": "pending",
+      "rider_id": null,
+      "estimated_delivery_seconds": null,
+      "items": []
+    },
+    {
+      "order_id": "f5103dd6cc984801",
+      "customer_name": "Bulk2",
+      "customer_phone": "13800139002",
+      "pickup_address": "CBD",
+      "pickup_location": {
+        "lat": 39.91,
+        "lng": 116.4
+      },
+      "delivery_address": "D",
+      "delivery_location": {
+        "lat": 39.92,
+        "lng": 116.41
+      },
+      "region": "default",
+      "priority": 1,
+      "promised_delivery_seconds": 1800,
+      "created_at": 1781324961.861599,
+      "assigned_at": null,
+      "picked_at": null,
+      "delivered_at": null,
+      "status": "pending",
+      "rider_id": null,
+      "estimated_delivery_seconds": null,
+      "items": []
+    },
+    {
+      "order_id": "9548df5ddef5414c",
+      "customer_name": "Bulk3",
+      "customer_phone": "13800139003",
+      "pickup_address": "CBD",
+      "pickup_location": {
+        "lat": 39.91,
+        "lng": 116.4
+      },
+      "delivery_address": "D",
+      "delivery_location": {
+        "lat": 39.92,
+        "lng": 116.41
+      },
+      "region": "default",
+      "priority": 1,
+      "promised_delivery_seconds": 1800,
+      "created_at": 1781324962.160543,
+      "assigned_at": null,
+      "picked_at": null,
+      "delivered_at": null,
+      "status": "pending",
+      "rider_id": null,
+      "estimated_delivery_seconds": null,
+      "items": []
+    }
+  ],
+  "alerts": [
+    {
+      "alert_id": "72599e9a6ee2405b",
+      "type": "disconnect",
+      "severity": "warning",
+      "rider_id": "481059d1ccc44020",
+      "order_id": null,
+      "message": "骑手test已断线 31494543秒",
+      "created_at": 1781324948.220456,
+      "resolved": false
+    }
+  ],
+  "dispatch_records": [
+    {
+      "record_id": "c9ff75bef4fc47d7",
+      "order_id": "8c85e9da03e14fe5",
+      "rider_id": "481059d1ccc44020",
+      "assigned_at": 1781324936.205291,
+      "distance_meters": 1226.1,
+      "score": 0.819,
+      "reason": "auto"
+    }
+  ],
+  "trajectory_points": [
+    {
+      "lat": 39.91,
+      "lng": 116.4,
+      "timestamp": 1749830400.0,
+      "accuracy": 10.0,
+      "speed": 5.0,
+      "bearing": null,
+      "rider_id": "481059d1ccc44020"
+    },
+    {
+      "lat": 39.911,
+      "lng": 116.401,
+      "timestamp": 1749830405.0,
+      "accuracy": 10.0,
+      "speed": 5.0,
+      "bearing": null,
+      "rider_id": "481059d1ccc44020"
+    }
+  ],
+  "timestamp": 1781324995.415482
+}
