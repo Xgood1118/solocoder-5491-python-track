@@ -1,0 +1,128 @@
+{
+  "riders": [
+    {
+      "rider_id": "124c08c396ed416a",
+      "name": "Zhang San",
+      "phone": "13800001111",
+      "region": "cbd",
+      "status": "idle",
+      "current_location": {
+        "lat": 39.905,
+        "lng": 116.408,
+        "timestamp": 1781347336.423602,
+        "accuracy": 10.0,
+        "speed": 3.5,
+        "bearing": null
+      },
+      "last_seen": 1781347336.423602,
+      "score": 4.8,
+      "daily_orders": 0,
+      "current_orders": 1,
+      "total_delivered": 0,
+      "avg_delivery_minutes": 0.0,
+      "capacity": 6,
+      "online_since": null
+    },
+    {
+      "rider_id": "c00d7028d9d9449d",
+      "name": "Li Si",
+      "phone": "13800002222",
+      "region": "east",
+      "status": "idle",
+      "current_location": {
+        "lat": 39.92,
+        "lng": 116.48,
+        "timestamp": 1781318536.419586,
+        "accuracy": 15.0,
+        "speed": null,
+        "bearing": null
+      },
+      "last_seen": 1781318536.419586,
+      "score": 4.5,
+      "daily_orders": 0,
+      "current_orders": 0,
+      "total_delivered": 0,
+      "avg_delivery_minutes": 0.0,
+      "capacity": 8,
+      "online_since": null
+    }
+  ],
+  "orders": [
+    {
+      "order_id": "7a95c5a86b6940bb",
+      "customer_name": "Wang Wu",
+      "customer_phone": "13900001111",
+      "pickup_address": "CBD Store A",
+      "pickup_location": {
+        "lat": 39.906,
+        "lng": 116.408
+      },
+      "delivery_address": "Building B",
+      "delivery_location": {
+        "lat": 39.91,
+        "lng": 116.412
+      },
+      "region": "default",
+      "priority": 2,
+      "promised_delivery_seconds": 1800,
+      "created_at": 1781318543.12866,
+      "assigned_at": 1781318545.179585,
+      "picked_at": null,
+      "delivered_at": null,
+      "status": "assigned",
+      "rider_id": "124c08c396ed416a",
+      "estimated_delivery_seconds": 434,
+      "items": []
+    },
+    {
+      "order_id": "e061e8b45be247e8",
+      "customer_name": "Zhao Liu",
+      "customer_phone": "13900002222",
+      "pickup_address": "East Store C",
+      "pickup_location": {
+        "lat": 39.915,
+        "lng": 116.415
+      },
+      "delivery_address": "East Building D",
+      "delivery_location": {
+        "lat": 39.92,
+        "lng": 116.42
+      },
+      "region": "default",
+      "priority": 1,
+      "promised_delivery_seconds": 1800,
+      "created_at": 1781318547.219865,
+      "assigned_at": null,
+      "picked_at": null,
+      "delivered_at": null,
+      "status": "pending",
+      "rider_id": null,
+      "estimated_delivery_seconds": null,
+      "items": []
+    }
+  ],
+  "alerts": [],
+  "dispatch_records": [
+    {
+      "record_id": "cfed6c62408648d1",
+      "order_id": "7a95c5a86b6940bb",
+      "rider_id": "124c08c396ed416a",
+      "assigned_at": 1781318545.179585,
+      "distance_meters": 111.2,
+      "score": 0.96,
+      "reason": "auto"
+    }
+  ],
+  "trajectory_points": [
+    {
+      "lat": 39.905,
+      "lng": 116.408,
+      "timestamp": 1781347336.423602,
+      "accuracy": 10.0,
+      "speed": 3.5,
+      "bearing": null,
+      "rider_id": "124c08c396ed416a"
+    }
+  ],
+  "timestamp": 1781318657.393771
+}
